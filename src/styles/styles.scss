@@ -1,0 +1,123 @@
+* {
+    box-sizing: border-box;
+}
+
+div,
+h1,
+h2,
+p {
+    padding: 0;
+    margin: 0;
+}
+
+.wrapper {
+    width: 100%;
+    margin: 0 auto;
+}
+
+.header-container {
+    height: 50px;
+    background-color: aliceblue;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+
+    .header-title {
+        font-size: 18px;
+        font-weight: 700;
+    }
+
+    .header-currency-container {
+        font-size: 16px;
+        font-weight: 700;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-column-gap: 30px;
+    }
+}
+
+.header-currency-block {
+    display: flex;
+
+    .header-currency-block-title {
+        margin-right: 10px;
+    }
+}
+
+.main-container {
+    padding-top: 20px;
+    height: calc(100vh - 70px);
+    background-color: bisque;
+
+    .main-container-title {
+        margin-bottom: 100px;
+        text-align: center;
+        text-transform: uppercase;
+        font-size: 24px;
+        font-weight: 700;
+    }
+}
+
+.form {
+    width: 100%;
+
+    .form-container {
+        display: flex;
+        justify-content: space-around;
+
+        .form-block-input {
+            height: 50px;
+            padding: 0 10px;
+            border-radius: 10px;
+            border: none;
+            outline: none;
+            font-size: 18px;
+            margin-right: 10px;
+
+            &:focus {
+                box-shadow: 0 0 5px rgb(74, 74, 221);
+            }
+        }
+
+        .form-block-select {
+            height: 40px;
+            background-color: cadetblue;
+            border-radius: 10px;
+            border: none;
+        }
+
+    }
+
+    .form-button-blok {
+        margin: 20px auto;
+        width: 200px;
+
+        .form-button-blok-item {
+            width: 200px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 40px;
+            font-size: 18px;
+            font-weight: 700;
+            border-radius: 5px;
+            letter-spacing: 1px;
+            cursor: pointer;
+            background-color: #b82b2b;
+            border: none;
+            transition: background-color 0.5s ease 0s;
+            transition: color 0.2s ease 0s;
+            position: relative;
+            top: 0;
+    
+            &:hover {
+                background-color: #881313;
+                color: white;
+            }
+    
+            &:active {
+                top: 3px;
+            }
+        }
+    }
+}
