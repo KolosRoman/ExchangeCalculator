@@ -1,203 +1,107 @@
 import React, {useState} from 'react';
 
 
-export const CurrencyExchange = ({currentRate}) => {
-    let [todayCourseUsd, todayCourseEur] = currentRate;
+export const CurrencyExchange = ({todayCurrentRate}) => {
     const [inputValueOne, setinputValueOne] = useState('');
+    const [resultOne, setResultOne] = useState('');
     const [inputValueTwo, setinputValueTwo] = useState('');
-    const [selectCurrencyOne, setSelectCurrencyOne] = useState('USD');
+    const [resultTwo, setResultTwo] = useState('');
+    const [selectCurrencyOne, setSelectCurrencyOne] = useState('UAH');
     const [selectCurrencyTwo, setSelectCurrencyTwo] = useState('UAH');
 
+    let currentRateWithHryvnya = [...todayCurrentRate, {r030: 100, rate: 1, cc: 'UAH'}]
 
-    const onSelectCurrencyTwo = (e) => {
 
-        if (e.target.value === 'USD') {
+    let currencyRates = currentRateWithHryvnya.reduce((acc, el) => {
+        acc[el.cc] = el.rate
+        return acc
+    }, {})
 
-            if (selectCurrencyOne === 'USD') {
-                setinputValueTwo(inputValueOne)
-            }
-            if (selectCurrencyOne === 'UAH') {
-                setinputValueTwo(inputValueOne/todayCourseUsd)
-            }
-            if (selectCurrencyOne === 'EUR') {
-                setinputValueTwo(inputValueOne*todayCourseEur/todayCourseUsd)
-            }
+    function crossconvertRight (value, currency1, currency2) {
+        let result;
+        if (currency2 === currency1) {
+            result = value;
         }
 
-        if (e.target.value === 'UAH') {
-
-            if (selectCurrencyOne === 'USD') {
-                setinputValueTwo(inputValueOne*todayCourseUsd)
-            }
-            if (selectCurrencyOne === 'UAH') {
-                setinputValueTwo(inputValueOne)
-            }
-            if (selectCurrencyOne === 'EUR') {
-                setinputValueTwo(inputValueOne*todayCourseEur)
-            }
-        }
-
-        if (e.target.value === 'EUR') {
-
-            if (selectCurrencyOne === 'USD') {
-                setinputValueTwo(inputValueOne*todayCourseUsd/todayCourseEur)
-            }
-            if (selectCurrencyOne === 'UAH') {
-                setinputValueTwo(inputValueOne/todayCourseEur)
-            }
-            if (selectCurrencyOne === 'EUR') {
-                setinputValueTwo(inputValueOne)
-            }
-        }
-
-        setSelectCurrencyTwo(e.target.value);
-    }
-
-    const onSelectCurrencyOne = (e) => {
-        if (e.target.value === 'USD') {
-            if (selectCurrencyTwo === 'USD') {
-                setinputValueOne(inputValueTwo)
-            }
-            if (selectCurrencyTwo === 'UAH') {
-                setinputValueOne(inputValueTwo/todayCourseUsd)
-            }
-            if (selectCurrencyTwo === 'EUR') {
-                setinputValueOne(inputValueTwo*todayCourseUsd/todayCourseEur)
-            }
-        }
-
-        if (e.target.value === 'UAH') {
-            if (selectCurrencyTwo === 'USD') {
-                setinputValueOne(inputValueTwo*todayCourseUsd)
-            }
-            if (selectCurrencyTwo === 'UAH') {
-                setinputValueOne(inputValueTwo)
-            }
-            if (selectCurrencyTwo === 'EUR') {
-                setinputValueOne(inputValueTwo*todayCourseEur)
-            }
-        }
-
-        if (e.target.value === 'EUR') {
-            if (selectCurrencyTwo === 'USD') {
-                setinputValueOne(inputValueTwo*todayCourseUsd/todayCourseEur)
-            }
-
-            if (selectCurrencyTwo === 'UAH') {
-                setinputValueOne(inputValueTwo/todayCourseEur)
-            }
-
-            if (selectCurrencyTwo === 'EUR') {
-                setinputValueOne(inputValueTwo)
-            }
-        }
-
-        setSelectCurrencyOne(e.target.value);
-    }
-    
-
-    const onInputValueCurrencyOne = (e) => {
-        setinputValueOne(e.target.value);
-
-        if (selectCurrencyOne === 'UAH') {
-            if (selectCurrencyTwo === 'UAH') {
-                setinputValueTwo(e.target.value)
-            }
-    
-            if (selectCurrencyTwo === 'EUR') {
-                setinputValueTwo(e.target.value/todayCourseEur)
-            }
-    
-            if (selectCurrencyTwo === 'USD') {
-                setinputValueTwo(e.target.value/todayCourseUsd)
-            }
-        }
-
-        if (selectCurrencyOne === 'USD') {
-            if (selectCurrencyTwo === 'UAH') {
-                setinputValueTwo(e.target.value*todayCourseUsd)
-            }
-    
-            if (selectCurrencyTwo === 'EUR') {
-                setinputValueTwo(e.target.value*todayCourseUsd/todayCourseEur)
-            }
-    
-            if (selectCurrencyTwo === 'USD') {
-                setinputValueTwo(e.target.value)
-            }
-        }
-
-        if (selectCurrencyOne === 'EUR') {
-            if (selectCurrencyTwo === 'UAH') {
-                setinputValueTwo(e.target.value*todayCourseEur)
-            }
-    
-            if (selectCurrencyTwo === 'EUR') {
-                setinputValueTwo(e.target.value)
-            }
-    
-            if (selectCurrencyTwo === 'USD') {
-                setinputValueTwo(e.target.value*todayCourseEur/todayCourseUsd)
-            }
+        if (currencyRates[currency1] === 1) {
+            result = value/currencyRates[currency2];
+        } else {
+            result = value*currencyRates[currency1]/currencyRates[currency2];
         }
         
+        return result;
     }
 
-    const onInputValueCurrencyTwo = (e) => {
+    function crossconvertLeft (value, currency1, currency2) {
+        let result;
+        if (currency2 === currency1) {
+            result = value;
+        }
+
+        if (currencyRates[currency2] === 1) {
+            result = value/currencyRates[currency1];
+        } else {
+            result = value*currencyRates[currency2]/currencyRates[currency1];
+        }
+
+        return result;
+    }
+    
+
+    let onInput = (e) => {
+        setinputValueOne(e.target.value);
         setinputValueTwo(e.target.value);
+        setResultOne(e.target.value);
+        setResultTwo(e.target.value);
 
-        if (selectCurrencyOne === 'UAH') {
-            if (selectCurrencyTwo === 'UAH') {
-                setinputValueOne(e.target.value)
-            }
-    
-            if (selectCurrencyTwo === 'EUR') {
-                setinputValueOne(e.target.value*todayCourseEur)
-            }
-    
-            if (selectCurrencyTwo === 'USD') {
-                setinputValueOne(e.target.value*todayCourseUsd)
-            }
+        if (e.target.name === 'inputLeft') {
+            let input = e.target.value;
+            
+            let result = crossconvertRight(input, selectCurrencyOne, selectCurrencyTwo);
+            setResultTwo(result);
+            setResultOne(input);
+            setinputValueTwo(result)
+
         }
+        
+        if (e.target.name === 'inputRight') {
+            let input = e.target.value;
 
-        if (selectCurrencyOne === 'USD') {
-            if (selectCurrencyTwo === 'UAH') {
-                setinputValueOne(e.target.value/todayCourseUsd)
-            }
-    
-            if (selectCurrencyTwo === 'EUR') {
-                setinputValueOne(e.target.value*todayCourseEur/todayCourseUsd)
-            }
-    
-            if (selectCurrencyTwo === 'USD') {
-                setinputValueOne(e.target.value)
-            }
-        }
-
-        if (selectCurrencyOne === 'EUR') {
-            if (selectCurrencyTwo === 'UAH') {
-                setinputValueOne(e.target.value/todayCourseEur)
-            }
-    
-            if (selectCurrencyTwo === 'EUR') {
-                setinputValueOne(e.target.value)
-            }
-    
-            if (selectCurrencyTwo === 'USD') {
-                setinputValueOne(e.target.value*todayCourseUsd/todayCourseEur)
-            }
+            let result = crossconvertLeft(input, selectCurrencyOne, selectCurrencyTwo)
+            setResultOne(result);
+            setResultTwo(input);
+            setinputValueOne(result);
         }
     }
 
+    let onCurrencyChoice = (e) => {
+        if (e.target.name === 'valueRight') {
+            let result = crossconvertRight(resultOne, selectCurrencyOne, e.target.value);
+            setResultTwo(result);
+            setinputValueTwo(result);
+            setSelectCurrencyTwo(e.target.value);
+        }
+        if (e.target.name === 'valueLeft') {
+            let result = crossconvertLeft(resultTwo, e.target.value, selectCurrencyTwo);
+            setResultOne(result);
+            setinputValueOne(result);
+            setSelectCurrencyOne(e.target.value);
+        }
+    }
 
     let editInputValue = (inputValue) => {
 
-        return String(Math.round(+inputValue * 100) / 100)
+        if (inputValue === '') {
+            return '';
+        }
+        return String(Math.round(+inputValue * 100) / 100);
     }
 
     const onButtonClean = () => {
-        setinputValueOne('')
-        setinputValueTwo('')
+        setinputValueOne('');
+        setinputValueTwo('');
+        setResultOne('');
+        setResultTwo('');
     }
 
     return (
@@ -206,26 +110,26 @@ export const CurrencyExchange = ({currentRate}) => {
             <form action="#" className='form'>
                 <div className='form-container'>
                     <div className='form-block'>
-                        <input type="number" value={editInputValue(inputValueOne)} onInput={onInputValueCurrencyOne}className='form-block-input'/>
-                        <select name="value1" onChange={onSelectCurrencyOne} className='form-block-select'>
-                            <option>USD</option>
-                            <option>EUR</option>
-                            <option>UAH</option>
+                        <input type="number" name='inputLeft' value={editInputValue(inputValueOne)} onInput={onInput} className='form-block-input'/>
+                        <select name="valueLeft" onChange={onCurrencyChoice} className='form-block-select'>
+                        {currentRateWithHryvnya.map(el => (
+                            <option key={el.r030} value={el.cc}>{el.cc}</option>
+                        ))}
                         </select>
                     </div>
                     <div className='form-block'>
-                        <input type="number" value={editInputValue(inputValueTwo)} onInput={onInputValueCurrencyTwo} className='form-block-input'/>
-                        <select name="value2" onChange={onSelectCurrencyTwo} className='form-block-select'>
-                            <option>UAH</option>
-                            <option>USD</option>
-                            <option>EUR</option>
+                    <input type="number" name='inputRight' value={editInputValue(inputValueTwo)} onInput={onInput} className='form-block-input'/>
+                        <select name="valueRight" onChange={onCurrencyChoice} className='form-block-select'>
+                        {currentRateWithHryvnya.map(el => (
+                            <option key={el.r030} value={el.cc}>{el.cc}</option>
+                        ))}
                         </select>
                     </div>
                 </div>
                 <div className='form-button-blok'>
                     <button type='button' onClick={onButtonClean} className='form-button-blok-item'>Очистити</button>
                 </div>
-        </form>
+            </form>
         </main>
     )
 }
